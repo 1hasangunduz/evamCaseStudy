@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="kavak Case Study" preserve-order="true">
+
+    <test name="kavak Scenario 1 Flight Tests" >
+
+        <parameter name="browser" value="chrome"/>
+        <parameter name="environment" value="prod"/>
+
+        <classes>
+            <class name="tests.E2E.KavakHomePageTests"/>
+        </classes>
+    </test>
+
+
+
+</suite>
