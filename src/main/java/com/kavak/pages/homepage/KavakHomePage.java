@@ -9,13 +9,11 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -321,6 +319,74 @@ public class KavakHomePage extends BasePage {
 
         Assert.assertTrue(sorted, "Prices are not sorted in ascending order ➜ " + prices);
         Log.pass("Prices are correctly sorted in ascending order.");
+
+        return this;
+    }
+
+    //  FOR CUCUMBER
+    @Step("Navigate to Kayak homepage")
+    public KavakHomePage navigateToKayak() {
+        Driver.getDriver().get("https://www.kayak.com.tr/");
+        Log.pass("Navigated to Kayak homepage.");
+        return this;
+    }
+
+    @Step("Validate all flights have only one transfer")
+    public KavakHomePage validateOnlyOneTransferFilterApplied() {
+        List<WebElement> transferBadges = Driver.getDriver().findElements(By.cssSelector(".VY2U-transfer-tag")); // örnek class
+        for (WebElement badge : transferBadges) {
+            String text = badge.getText().toLowerCase(Locale.ROOT);
+            if (!text.contains("1 aktarma")) {
+                Log.fail("More than one transfer found: " + text);
+                throw new AssertionError("Flight found with more than one transfer.");
+            }
+            Log.pass("Valid transfer found: " + text);
+        }
+        return this;
+    }
+
+    @Step("Validate all departure flights are after 12:00")
+    public KavakHomePage validateDepartureFilterAfterNoon() {
+        List<WebElement> departureTimes = Driver.getDriver().findElements(By.cssSelector(".k8uH-time-start")); // örnek class
+
+        for (WebElement time : departureTimes) {
+            String timeText = time.getText().trim(); // e.g. "12:45"
+            String[] parts = timeText.split(":");
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+
+            if (hour < 12) {
+                Log.fail("Departure filter starts before 12:00 ➜ Found: " + timeText);
+                throw new AssertionError("Departure time is before 12:00 ➜ " + timeText);
+            }
+            Log.pass("Valid departure time: " + timeText);
+        }
+        return this;
+    }
+
+    @Step("Select departure route: {departureRoute}")
+    public KavakHomePage selectDepartureRouteBdd(String routeName, String departureRoute) {
+        try {
+            waitMs(3000);
+            acceptCookies();
+            waitMs(2000);
+
+            clickElement(clearButtonDepartureInputBox, routeName + " Route Box base route closed.");
+            Log.pass("Mevcut kalkış konumu kapatıldı: " + routeName);
+
+            clickElement(inputDepartureDestination, routeName + " Route Box");
+
+            waitMs(200);
+            sendKeysCharacters(inputDepartureDestination, departureRoute);
+            waitMs(200);
+            Log.pass("Kalkış rotası girildi: " + departureRoute);
+
+            selectMatchingAirportFromList(textRowAirportCode, departureRoute);
+
+        } catch (Exception e) {
+            Log.fail("Kalkış rotası seçimi sırasında hata oluştu: " + e.getMessage());
+            throw e;
+        }
 
         return this;
     }
