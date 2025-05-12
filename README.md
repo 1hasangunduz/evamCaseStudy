@@ -1,4 +1,4 @@
-# evamCaseStudy - E2E Flight Booking Automation Framework
+# Evam Case Study - Flight Booking Automation Framework
 
 This project is an end-to-end (E2E) test automation framework for flight booking on Kayak, implemented in Java using Selenium WebDriver, Cucumber BDD, and TestNG.
 
@@ -40,7 +40,7 @@ evamCaseStudy/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/evamCaseStudy.git
+git clone https://github.com/1hasangunduz/evamCaseStudy.git
 cd evamCaseStudy
 ```
 
@@ -50,11 +50,10 @@ cd evamCaseStudy
 mvn clean test
 ```
 
-### 3. Run Specific Feature File with Tags
+### 3. Run Tests for TDD
 
-```bash
-mvn test -Dcucumber.filter.tags="@FlightBooking"
-```
+path : suites/SuiteKavakE2E.xml
+
 
 ### 4. Generate Allure Report
 
@@ -125,9 +124,9 @@ environment=prod
 
 ## 👨‍💻 Maintainer
 
-* [Hasan Gündüz](mailto:hasan.gunduz@yourcompany.com)
+* [Hasan Gunduz](hasangunduz1010@gmail.com)
 
 ---
 
 Feel free to fork or raise issues if you encounter any problems.
-Happy Testing! ✨
+Happy Testing!
